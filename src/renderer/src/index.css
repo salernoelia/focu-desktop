@@ -1,0 +1,17 @@
+/* ./src/index.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.icon {
+  width: 3rem;
+  height: 3rem;
+}
+
+:root {
+  --color-Primary: #3498db;
+  --color-Secondary: #2ecc71;
+  --color-Tertiary: #e74c3c;
+  --font-Primary: 'Arial', sans-serif;
+  --font-Secondary: 'Courier New', monospace;
+}
