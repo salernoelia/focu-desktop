@@ -7,9 +7,13 @@
 import { ref, onMounted, onUnmounted } from "vue";
 import { useRouter } from "vue-router";
 import TaskInput from "./components/TaskInput.vue";
-import tasks from "./assets/tasks";
+// import tasks from "./assets/tasks";
 import type { Task } from "./types/Task";
 import { useTaskInputStore } from "./store/taskInput";
+import { useTaskStore } from './store/taskStore'
+const taskStore = useTaskStore()
+
+const tasks = taskStore.tasks
 
 const router = useRouter();
 const taskInputStore = useTaskInputStore();

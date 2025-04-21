@@ -1,7 +1,7 @@
-import tasks from '../assets/tasks'
 import { ref, type Ref } from 'vue'
 import { v4 as uuidv4 } from 'uuid'
 import type { Task } from '../types/Task'
+import { useTaskStore } from '../store/taskStore'
 import CreateTaskPrompt from '../assets/prompts/CreateTask.md?raw'
 
 export function useTaskCreationRequest(): {
@@ -11,6 +11,7 @@ export function useTaskCreationRequest(): {
 } {
   const isLoading = ref(false)
   const error = ref<Error | null>(null)
+  const taskStore = useTaskStore()
 
   /**
    * Creates a new task via the Groq API using the v1 CreateTaskPrompt
@@ -75,10 +76,13 @@ export function useTaskCreationRequest(): {
         taskObject.id = uuidv4()
         taskObject.created = currentTimestamp
         taskObject.last_edited = currentTimestamp
-
         taskObject.status = 'todo'
 
-        tasks.value.push(taskObject)
+        // Save task using the task store
+        const result = await taskStore.createTask(taskObject)
+        if (!result) {
+          throw new Error('Failed to save task')
+        }
 
         return taskObject
       } catch (parseError) {

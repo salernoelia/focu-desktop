@@ -2,12 +2,48 @@ import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
+import Store from 'electron-store'
+import type { Task } from '../renderer/src/types/Task'
+
+const schema = {
+  tasks: {
+    type: 'array' as const,
+    default: []
+  }
+}
+
+const store = new Store({ schema })
+
+const getTasks = (): Task[] => store.get('tasks') as Task[]
+
+const setTasks = (tasks: Task[]): void => store.set('tasks', tasks)
+
+const addTask = (task: Task): void => {
+  const tasks = getTasks()
+  tasks.push(task)
+  setTasks(tasks)
+}
+
+const updateTask = (updatedTask: Task): void => {
+  const tasks = getTasks()
+  const index = tasks.findIndex(task => task.id === updatedTask.id)
+  if (index !== -1) {
+    tasks[index] = updatedTask
+    setTasks(tasks)
+  }
+}
+
+const deleteTask = (taskId: string): void => {
+  const tasks = getTasks()
+  const filteredTasks = tasks.filter(task => task.id !== taskId)
+  setTasks(filteredTasks)
+}
 
 function createWindow(): void {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
-    width: 900,
-    height: 670,
+    width: 1000,
+    height: 750,
     show: false,
     autoHideMenuBar: true,
     ...(process.platform === 'linux' ? { icon } : {}),
@@ -21,13 +57,11 @@ function createWindow(): void {
     mainWindow.show()
   })
 
-  mainWindow.webContents.setWindowOpenHandler((details) => {
+  mainWindow.webContents.setWindowOpenHandler(details => {
     shell.openExternal(details.url)
     return { action: 'deny' }
   })
 
-  // HMR for renderer base on electron-vite cli.
-  // Load the remote URL for development or the local html file for production.
   if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
     mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL'])
   } else {
@@ -51,6 +85,46 @@ app.whenReady().then(() => {
 
   // IPC test
   ipcMain.on('ping', () => console.log('pong'))
+
+  ipcMain.handle('save-task', (_event, task: Task) => {
+    try {
+      addTask(task)
+      return { success: true }
+    } catch (error: unknown) {
+      console.error('Failed to save task:', error)
+      return { success: false, error: (error as Error).message }
+    }
+  })
+
+  ipcMain.handle('get-tasks', () => {
+    try {
+      const tasks = getTasks()
+      return tasks
+    } catch (error: unknown) {
+      console.error('Failed to get tasks:', error)
+      throw error
+    }
+  })
+
+  ipcMain.handle('update-task', (_event, task: Task) => {
+    try {
+      updateTask(task)
+      return { success: true }
+    } catch (error: unknown) {
+      console.error('Failed to update task:', error)
+      return { success: false, error: (error as Error).message }
+    }
+  })
+
+  ipcMain.handle('delete-task', (_event, taskId: string) => {
+    try {
+      deleteTask(taskId)
+      return { success: true }
+    } catch (error: unknown) {
+      console.error('Failed to delete task:', error)
+      return { success: false, error: (error as Error).message }
+    }
+  })
 
   createWindow()
 
