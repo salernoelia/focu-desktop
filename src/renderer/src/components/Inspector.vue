@@ -12,7 +12,7 @@
 <script setup lang="ts">
 import type { Task } from '../types/Task';
 
-const props = defineProps<{
+defineProps<{
   task: Task
 }>();
 </script>
@@ -31,7 +31,7 @@ const props = defineProps<{
   flex-direction: column;
   justify-content: flex-start;
   text-align: left;
-  align-items: start/;
+  align-items: start;
   gap: 0.5rem;
   background-color: var(--vf-node-bg);
   border-radius: 1rem;

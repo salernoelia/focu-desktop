@@ -6,3 +6,6 @@ singleQuote: true
 trailingComma: none
 bracketSpacing: true
 arrowParens: avoid
+vueIndentScriptAndStyle: true
+htmlWhitespaceSensitivity: 'ignore'
+singleAttributePerLine: true

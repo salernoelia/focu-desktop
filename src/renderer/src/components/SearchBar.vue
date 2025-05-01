@@ -9,7 +9,9 @@
     </div>
 
     <div class="filter-buttons">
-      <button v-for="filter in filters" :key="filter.value"
+      <button
+      v-for="filter in filters"
+      :key="filter.value"
         :class="['filter-button', { active: currentFilter === filter.value }]" @click="selectFilter(filter.value)">
         {{ filter.label }}
       </button>

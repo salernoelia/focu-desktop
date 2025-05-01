@@ -19,7 +19,7 @@
 </template>
 
 <script setup lang="ts">
-const emits = defineEmits(['addNode', 'addTask', 'autolayout'])
+defineEmits(['addNode', 'addTask', 'autolayout'])
 </script>
 
 <style scoped>

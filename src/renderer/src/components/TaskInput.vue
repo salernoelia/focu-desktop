@@ -1,9 +1,9 @@
 <template>
   <div class="task-input-container">
     <div class="search-container">
-      <input type="text" ref="inputRef" v-model="taskName" placeholder="Task Name" class="task-input"
+      <input ref="inputRef" v-model="taskName" type="text" placeholder="Task Name" class="task-input"
         @input="filterTasks" />
-      <div class="suggestions-container" v-if="displayedTasks.length">
+      <div v-if="displayedTasks.length" class="suggestions-container">
         <div v-for="task in displayedTasks" :key="task.id" class="suggestion-item" @click="selectTask(task)">
           <p>
             {{ task.name }}
@@ -17,7 +17,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, computed, onUnmounted } from 'vue'
-import { useRouter } from 'vue-router'
+
 import type { Task } from '../types/Task'
 
 import { useTaskStore } from '../store/taskStore'
@@ -25,7 +25,6 @@ const taskStore = useTaskStore()
 
 const tasks = taskStore.tasks
 
-const router = useRouter()
 // const props = defineProps({
 //   tasks: {
 //     type: Array,
@@ -55,12 +54,11 @@ const fuzzySearch = (query: string, text: string) => {
   return queryIndex === queryLower.length
 }
 
-
 const displayedTasks = computed(() => {
   const query = taskName.value.trim()
 
   if (!query) {
-    return [...(tasks.value)]
+    return [...tasks.value]
       .sort((a, b) => new Date(b.last_edited).getTime() - new Date(a.last_edited).getTime())
       .slice(0, 5)
   }
@@ -82,21 +80,20 @@ const displayedTasks = computed(() => {
 
 const handleKeyDown = (event: KeyboardEvent) => {
   if (event.key === 'Enter' && displayedTasks.value.length > 0) {
-    selectTask(displayedTasks.value[0]);
+    selectTask(displayedTasks.value[0])
   }
-};
+}
 
 onMounted(() => {
   inputRef.value?.focus()
-  window.addEventListener('keydown', handleKeyDown);
+  window.addEventListener('keydown', handleKeyDown)
 })
 
 onUnmounted(() => {
-  window.removeEventListener('keydown', handleKeyDown);
-});
+  window.removeEventListener('keydown', handleKeyDown)
+})
 
-const filterTasks = () => {
-}
+const filterTasks = () => { }
 
 const selectTask = (task: Task) => {
   emit('selectTask', task)
@@ -162,7 +159,6 @@ const close = () => {
 
 .task-input:focus {
   outline: none;
-
 }
 
 .suggestions-container {
@@ -178,7 +174,6 @@ const close = () => {
   z-index: 6;
   border: var(--vf-node-color) 1px solid;
   border-top: none;
-
 }
 
 .suggestion-item {
