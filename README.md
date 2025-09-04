@@ -26,21 +26,6 @@ Foku aims to provide an intuitive and supportive environment for getting things 
 - **Local Data Persistence:** Your tasks are stored locally using Electron Store, ensuring privacy and offline access.
 - **Cross-Platform Desktop Application:** Built with Electron to run on Windows, macOS, and Linux.
 
-## Technology Stack
-
-- **Electron:** For building the cross-platform desktop application.
-- **Vue 3:** Frontend framework for building the user interface.
-- **TypeScript:** For enhanced code maintainability and type safety.
-- **Electron Vite:** Build tool for faster development cycles.
-- **Electron Builder:** For packaging and distributing the application.
-- **Vue Flow:** Library for rendering the node-based task graph.
-- **Dagre:** Graph layout library used for automatically arranging task nodes.
-- **Groq API:** Powers the AI capabilities for transcription and task breakdown.
-- **Electron Store:** Simple, persistent user data storage.
-- **Tailwind CSS:** Utility-first CSS framework for styling.
-- **Motion:** Animation library for UI enhancements.
-- **uuid:** For generating unique IDs for tasks and nodes.
-
 ## Work in Progress
 
 Please note that Foku is actively being developed. Key areas currently being worked on include:
